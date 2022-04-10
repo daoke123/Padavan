@@ -1,22 +1,26 @@
-SRC_NAME = ZeroTierOne-1.8.4
+SRC_NAME = ZeroTierOne-1.8.7
+SRC_URL = https://codeload.github.com/zerotier/ZeroTierOne/tar.gz/refs/tags/1.8.7
 THISDIR = $(shell pwd)
-FLAGS := DEFS=""
-CFLAGS := -Os -ffunction-sections -fdata-sections
+FLAGS := DEFS="" 
+CFLAGS := -O3 -ffunction-sections -fdata-sections
 LDFLAGS := -Wl,--gc-sections,--as-needed
 
-all: extract_test
+all: download_test extract_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+	
+download_test:
+	( if [ ! -f $(THISDIR)/$(SRC_NAME).tar.gz ]; then \
+		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.gz $(SRC_URL); \
+	fi )
 
 extract_test:
-	 if [ ! -d $(SRC_NAME) ] ; then \
+	( if [ ! -d $(SRC_NAME) ]; then \
 		tar xf $(SRC_NAME).tar.gz ; \
-		patch -d $(SRC_NAME) -p1 -i ../0001-fix-makefile.patch ; \
-		patch -d $(SRC_NAME) -p1 -i ../0006-gcc10.patch ; \
-		patch -d $(SRC_NAME) -p1 -i ../0007-add-cerrno-header-for-str-errno.patch ; \
-		patch -d $(SRC_NAME) -p1 -i ../0008-fix-compilation-for-arm_cortex-a7-neon.patch; \
-	 fi ;
-
+		patch -d $(SRC_NAME) -p1 -i ../0002-remove-pie.patch; \
+		patch -d $(SRC_NAME) -p1 -i ../010-auxv.patch; \
+	fi )
 config_test:
+
 clean:
 	if [ -f $(SRC_NAME)/Makefile ] ; then \
 		$(MAKE) -C $(SRC_NAME) distclean ; \
@@ -28,4 +32,3 @@ romfs:
 	ln -sf zerotier-one $(ROMFSDIR)/usr/bin/zerotier-cli
 	ln -sf zerotier-one $(ROMFSDIR)/usr/bin/zerotier-idtool
 	cp -fP $(CONFIG_CROSS_COMPILER_ROOT)/mipsel-linux-uclibc/sysroot/lib/libstdc++.so* $(ROMFSDIR)/lib
-
