@@ -9,7 +9,7 @@ include $(ROOTDIR)/user/shared/boards.mk
 PROJECT_HOME_URL="https:\/\/bitbucket.org\/padavan\/rt-n56u\/"
 PROJECT_HOME_URL_MOD="https:\/\/github.com\/hanwckf\/rt-n56u\/"
 
-LABEL_COPYRIGHT_TEXT='© 2022 <a href="htget="<a href="https:\/\/yuos.top\/index.php\/archives\/11\/" target="blank">小渔博客<\/a>\&  <a href="https:\/\/space.bilibili.com\/318787487" target="blank">Bilibili<\/a>'
+LABEL_COPYRIGHT_TEXT='© 2011-2022  <a href="https:\/\/blog.198168.xyz\/" target="blank">博客<\/a>'
 
 BOARD_PATTERN=s/ZVMODELVZ/$(CONFIG_FIRMWARE_PRODUCT_ID)/g
 COPYR_PATTERN=s/ZVCOPYRVZ/$(LABEL_COPYRIGHT_TEXT)/g
